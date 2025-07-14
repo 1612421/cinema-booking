@@ -48,6 +48,7 @@ booking_seats (booking_id, screen_id, seat_id)
 - Websocket đã được tích hợp vào home work 1
 - Khi user call API giữ ghế, một event sẽ được gửi cho toàn bộ user đang kết nối. 
 Mục đích để UI xử lý để các user chọn ghế 1 cách dễ dàng hơn
+- Hệ thống socket hiện tại chỉ run được trên single instance nen cần tích hợp thêm Redis Pub/Sub để có thể run server trên nhiều instance khi lượng traffic lớn
 
 # Trả lời thêm các câu hỏi
 
@@ -73,9 +74,9 @@ Mục đích để UI xử lý để các user chọn ghế 1 cách dễ dàng h
 - Vấn đề: Khi crawler quét được provider của nhà cái bất ngờ thêm 1 thể thức mới mà không báo trước.
 Điều này gây ra không thể nhận dạng loại betting để tính điểm và kết quả cho các user.
 Dẫn đến hệ thống tính điểm sai và trao giải không đúng trong khi có rất nhiều user đang theo dõi.
-- Giải pháp mình đã triển khai: 
+- Giải pháp đã triển khai: 
     - Meeting khẩn cấp để đưa ra business cho loại betting này
     - Vì code dùng các design pattern hiệu quả và vận dùng tốt các tính chất
-  OOP nên mình chỉ cần code thêm 1 model cho loại betting này và overirde lại logic tính kết quả sau đó load lên
-    - Với hệ thống quản lý các job hiệu quả, mình đã retry lại các job fail liên quan
+  OOP nên chỉ cần code thêm 1 model cho loại betting này và overirde lại logic tính kết quả sau đó load lên
+    - Với hệ thống quản lý các job hiệu quả, em đã retry lại các job fail liên quan
     để cập nhật lại kết quả.
