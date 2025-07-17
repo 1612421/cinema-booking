@@ -18,10 +18,10 @@ func NewBookingRepository(db *gorm.DB) *BookingRepository {
 	}
 }
 
-func (b *BookingRepository) Create(ctx context.Context, booking *entity.Booking, seatIDs []uuid.UUID, callback func() error) (*entity.Booking, *[]entity.BookingSeat, error) {
-	bookingSeats := make([]entity.BookingSeat, len(seatIDs))
+func (b *BookingRepository) Create(ctx context.Context, booking *entity.Booking, seatIDs []uuid.UUID, callback func() error) (*entity.Booking, []*entity.BookingSeat, error) {
+	bookingSeats := make([]*entity.BookingSeat, len(seatIDs))
 	for i, seatID := range seatIDs {
-		bookingSeats[i] = entity.BookingSeat{
+		bookingSeats[i] = &entity.BookingSeat{
 			ID:         uuid.New(),
 			BookingID:  booking.ID,
 			ShowtimeID: booking.ShowtimeID,
@@ -54,5 +54,14 @@ func (b *BookingRepository) Create(ctx context.Context, booking *entity.Booking,
 		return nil, nil, err
 	}
 
-	return booking, &bookingSeats, nil
+	return booking, bookingSeats, nil
+}
+
+func (b *BookingRepository) Delete(ctx context.Context, booking *entity.Booking) (success bool, err error) {
+	result := b.db.WithContext(ctx).Delete(booking)
+	if result.Error != nil {
+		return false, result.Error
+	}
+
+	return result.RowsAffected > 0, nil
 }

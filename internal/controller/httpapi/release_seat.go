@@ -18,6 +18,18 @@ type ReleaseSeatResponse struct {
 	Message string `json:"message"`
 }
 
+// ReleaseSeat godoc
+// @Summary      Release a seat
+// @Description  Unselect a seat
+// @Tags         seat
+// @Accept       json
+// @Produce      json
+// @Security BearerAuth
+// @Param        request   	body 	ReleaseSeatRequest  	true  "request credentials"
+// @Success      200  {object}  ReleaseSeatResponse
+// @Failure      400  {object}  errorx.ErrorWrapper
+// @Failure      500  {object}  errorx.ErrorWrapper
+// @Router       /bookings/release-seat [post]
 func (c *Controller) ReleaseSeat(ctx *gin.Context) {
 	request := &ReleaseSeatRequest{}
 
@@ -38,7 +50,7 @@ func (c *Controller) ReleaseSeat(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, HoldSeatResponse{
+	ctx.JSON(http.StatusOK, ReleaseSeatResponse{
 		Message: "release seat successfully",
 	})
 }

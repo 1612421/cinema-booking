@@ -2,7 +2,7 @@ GOFMT_FILES?=$$(find . -name '*.go')
 GOFMT := "goimports"
 LOCAL_IMAGE := cinema-booking
 service := $(or $(service),cinema-booking)
-SWAG = "go run github.com/swaggo/swag/cmd/swag"
+SWAG = "go run github.com/swaggo/swag/cmd/swag@latest"
 GOCOVERPKG = $(shell go list ./... | grep -v /internal/mocks/ | grep -v '.pb.go')
 
 dep:
@@ -17,7 +17,7 @@ fmt: ## Run gofmt for all .go files
 	buf format -w
 
 swagger:
-	@SWAG init -g ./cmd/server/main.go --ot go,yaml
+	@SWAG init -g ./cmd/cinema-booking/main.go --ot go,yaml
 
 generate: fmt  ## Generate proto & generate mock files
 	go generate ./...

@@ -9,7 +9,8 @@ import (
 )
 
 type IBookingRepository interface {
-	Create(ctx context.Context, booking *entity.Booking, seatIDs []uuid.UUID, callback func() error) (*entity.Booking, *[]entity.BookingSeat, error)
+	Create(ctx context.Context, booking *entity.Booking, seatIDs []uuid.UUID, callback func() error) (*entity.Booking, []*entity.BookingSeat, error)
+	Delete(ctx context.Context, booking *entity.Booking) (success bool, err error)
 }
 
 type BookingService struct {

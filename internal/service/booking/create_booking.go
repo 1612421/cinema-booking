@@ -16,7 +16,7 @@ type CreateBookingDTO struct {
 	SeatIDs    []uuid.UUID `json:"seat_ids"`
 }
 
-func (b *BookingService) CreateBooking(ctx context.Context, dto *CreateBookingDTO) (*entity.Booking, *[]entity.BookingSeat, error) {
+func (b *BookingService) CreateBooking(ctx context.Context, dto *CreateBookingDTO) (*entity.Booking, []*entity.BookingSeat, error) {
 	logger := log.For(ctx)
 
 	booking := &entity.Booking{
@@ -29,9 +29,8 @@ func (b *BookingService) CreateBooking(ctx context.Context, dto *CreateBookingDT
 	}
 
 	booking, bookingSeats, err := b.bookingRepo.Create(ctx, booking, dto.SeatIDs, func() error {
-		return b.seatCache.ReleaseSeats(ctx, redis.ReleaseSeatsBulkDTO{
+		return b.seatCache.HDelHoldSeatsAll(ctx, redis.ReleaseSeatsBulkDTO{
 			SeatIDs:    dto.SeatIDs,
-			UserID:     dto.UserID,
 			ShowtimeID: dto.ShowtimeID,
 		})
 	})

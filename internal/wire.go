@@ -7,6 +7,7 @@ package internal
 
 import (
 	"github.com/1612421/cinema-booking/config"
+	"github.com/1612421/cinema-booking/internal/bot"
 	infrastructurecache "github.com/1612421/cinema-booking/internal/infrastructure/cache"
 	"github.com/1612421/cinema-booking/internal/infrastructure/database"
 	"github.com/1612421/cinema-booking/internal/repository/mysql"
@@ -71,12 +72,15 @@ var (
 	bookingServiceSet = wire.NewSet(
 		bookingservice.NewBookingService,
 		redis.NewSeatCache,
-
 		wire.Bind(new(httpapi.IBookingService), new(*bookingservice.BookingService)),
 	)
 	socketServiceSet = wire.NewSet(
 		socketservice.NewSocketService,
 		wire.Bind(new(httpapi.ISocketService), new(*socketservice.SocketService)),
+	)
+	viewerSeatBotRunnerSet = wire.NewSet(
+		bot.NewGlobalViewerSeatBotRunner,
+		wire.Bind(new(httpapi.IGlobalViewerSeatBotRunner), new(*bot.GlobalViewerSeatBotRunner)),
 	)
 	httpapiControllerSet = wire.NewSet(httpapi.NewController)
 )
@@ -99,6 +103,7 @@ func InitializeHTTPAPIController() (*httpapi.Controller, func(), error) {
 			seatServiceSet,
 			bookingServiceSet,
 			socketServiceSet,
+			viewerSeatBotRunnerSet,
 			httpapiControllerSet,
 		),
 	)

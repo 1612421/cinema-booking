@@ -1,0 +1,46 @@
+service:
+  name: "cinema-booking"
+  version: "v1"
+  http:
+    port: 8080
+  env: local
+
+mysql:
+  host: db
+  port: 3306
+  database: cinema_booking
+  username: root
+  password: password
+  max_idle_connections: 1
+  max_open_connections: 10
+  max_connection_life_time: 5m
+
+log:
+  level: debug
+  encoder: custom_console
+
+session_service:
+  address: "localhost:50001"
+  use_tls: false
+  dns_resolver: false
+
+redis:
+  cluster: false
+  prefix: "example"
+  host: redis
+  port: 6379
+  password: "secret_redis"
+  db: 0
+  pool_size: 16
+  idle_connections: 2
+  enable_monitor: true
+
+auth:
+  secret: "secret-key"
+  expire_in: 3600
+
+bot:
+  workers: 10
+  booking_change: 0.05
+  frequency: 3
+  is_enabled: true

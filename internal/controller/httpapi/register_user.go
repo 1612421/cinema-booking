@@ -20,14 +20,25 @@ type UserRegisterRequest struct {
 }
 
 type UserWithAccessToken struct {
-	*entity.User
-	AccessToken string `json:"access_token"`
+	User        *entity.User `json:"user"`
+	AccessToken string       `json:"access_token"`
 }
 
 type UserRegisterResponse struct {
 	Data *UserWithAccessToken `json:"data"`
 }
 
+// RegisterUser godoc
+// @Summary      Register
+// @Description  Register
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param        request   	body 	UserRegisterRequest  	true  "request credentials"
+// @Success      200  {object}  UserRegisterResponse
+// @Failure      400  {object}  errorx.ErrorWrapper
+// @Failure      500  {object}  errorx.ErrorWrapper
+// @Router       /users/register [post]
 func (c *Controller) RegisterUser(ctx *gin.Context) {
 	request := &UserRegisterRequest{}
 	if err := ctx.ShouldBind(request); err != nil {

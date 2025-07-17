@@ -4,6 +4,7 @@ import (
 	"github.com/1612421/cinema-booking/config"
 	"github.com/1612421/cinema-booking/pkg/go-kit/errorx"
 	"github.com/1612421/cinema-booking/pkg/go-kit/log"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"net/http"
@@ -20,6 +21,10 @@ type AuthService struct {
 type AuthPayload struct {
 	Username string    `json:"username"`
 	UserId   uuid.UUID `json:"user_id"`
+}
+
+type AuthSocketRequest struct {
+	AccessToken string `form:"access_token" binding:"required"`
 }
 
 func ProvideHeaders() header.Parser {
@@ -107,6 +112,26 @@ func (a *AuthService) Authenticate(req *http.Request) (*AuthPayload, error) {
 	tokenString := metadata.Authorization
 	if tokenString == "" {
 		return nil, errorx.New(http.StatusUnauthorized, missingAuthMsg)
+	}
+
+	payload, err := a.VerifyAccessToken(tokenString)
+	if err != nil {
+		return nil, errorx.New(http.StatusUnauthorized, err.Error())
+	}
+
+	return payload, nil
+}
+
+func (a *AuthService) AuthenticateSocket(ctx *gin.Context) (*AuthPayload, error) {
+	request := &AuthSocketRequest{}
+	if err := ctx.ShouldBindQuery(request); err != nil {
+		return nil, errorx.New(http.StatusBadRequest, "Parse auth socket request failed")
+	}
+
+	// Check header Authorization
+	tokenString := request.AccessToken
+	if tokenString == "" {
+		return nil, errorx.New(http.StatusUnauthorized, "Access token missing or malformed")
 	}
 
 	payload, err := a.VerifyAccessToken(tokenString)

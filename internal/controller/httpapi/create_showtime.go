@@ -19,6 +19,18 @@ type CreateShowtimeResponse struct {
 	Data *entity.Showtime `json:"data"`
 }
 
+// CreateShowtime godoc
+// @Summary      Create a showtime
+// @Description  Create a showtime
+// @Tags         showtime
+// @Accept       json
+// @Produce      json
+// @Security BearerAuth
+// @Param        showtime   	body 	CreateShowtimeRequest  	true  "create showtime request"
+// @Success      200  {object}  CreateShowtimeResponse
+// @Failure      400  {object}  errorx.ErrorWrapper
+// @Failure      500  {object}  errorx.ErrorWrapper
+// @Router       /showtimes [post]
 func (c *Controller) CreateShowtime(ctx *gin.Context) {
 	request := &CreateShowtimeRequest{}
 	if err := ctx.ShouldBind(request); err != nil {

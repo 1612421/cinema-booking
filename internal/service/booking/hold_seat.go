@@ -14,19 +14,20 @@ type HoldSeatDTO struct {
 	SeatID     uuid.UUID `json:"seat_id,max=255"`
 }
 
-func (b *BookingService) HoldSeat(ctx context.Context, dto *HoldSeatDTO) error {
+func (b *BookingService) HoldSeat(ctx context.Context, dto *HoldSeatDTO) (int64, error) {
 	logger := log.For(ctx)
 
-	// Temporary lock seats
-	if err := b.seatCache.HoldSeat(ctx, redis.HoldSeatCacheDTO{
+	qty, err := b.seatCache.HoldSeat(ctx, redis.HoldSeatCacheDTO{
 		SeatID:     dto.SeatID,
 		UserID:     dto.UserID,
 		ShowtimeID: dto.ShowtimeID,
-	}); err != nil {
-		return err
+	})
+	if err != nil {
+		logger.Error("error hold seat", zap.Error(err))
+		return 0, err
 	}
 
 	logger.Info("hold seat", zap.Reflect("seat", dto))
 
-	return nil
+	return qty, nil
 }

@@ -18,6 +18,18 @@ type CreateMovieResponse struct {
 	Data *entity.Movie `json:"data"`
 }
 
+// CreateMovie godoc
+// @Summary      Create a movie
+// @Description  Create a movie
+// @Tags         movie
+// @Accept       json
+// @Produce      json
+// @Security BearerAuth
+// @Param        movie   	body 	CreateMovieRequest  	true  "Create movie request"
+// @Success      200  {object}  CreateMovieResponse
+// @Failure      400  {object}  errorx.ErrorWrapper
+// @Failure      500  {object}  errorx.ErrorWrapper
+// @Router       /movies [post]
 func (c *Controller) CreateMovie(ctx *gin.Context) {
 	request := &CreateMovieRequest{}
 	if err := ctx.ShouldBind(request); err != nil {

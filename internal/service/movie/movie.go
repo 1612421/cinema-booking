@@ -8,6 +8,8 @@ import (
 
 type IMovieRepository interface {
 	Create(ctx context.Context, movie *entity.Movie) (*entity.Movie, error)
+	Get(ctx context.Context, movie *entity.Movie) (*entity.Movie, error)
+	GetMovies(ctx context.Context) ([]*entity.Movie, error)
 }
 
 type MovieService struct {

@@ -1,0 +1,747 @@
+basePath: /api/v1
+definitions:
+  entity.BookingSeat:
+    properties:
+      booking_id:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      seat_id:
+        type: string
+      showtime_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.Movie:
+    properties:
+      created_at:
+        type: string
+      duration:
+        description: minutes
+        type: integer
+      id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.Seat:
+    properties:
+      class:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      number:
+        type: integer
+      row:
+        type: string
+      screen_id:
+        description: minutes
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.SeatWithStatus:
+    properties:
+      class:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      is_available:
+        type: boolean
+      number:
+        type: integer
+      row:
+        type: string
+      screen_id:
+        description: minutes
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.Showtime:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      movie_id:
+        type: string
+      screen_id:
+        description: minutes
+        type: string
+      start_time:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.User:
+    properties:
+      address:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      phone_number:
+        type: string
+      status:
+        description: active,ban,disabled
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  errorx.ErrorBody:
+    properties:
+      code:
+        type: integer
+      error:
+        type: string
+    type: object
+  errorx.ErrorWrapper:
+    properties:
+      error:
+        $ref: '#/definitions/errorx.ErrorBody'
+    type: object
+  httpapi.BookingWithSeats:
+    properties:
+      booking_seats:
+        items:
+          $ref: '#/definitions/entity.BookingSeat'
+        type: array
+      created_at:
+        type: string
+      id:
+        type: string
+      showtime_id:
+        type: string
+      status:
+        description: pending,confirmed,canceled
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        description: minutes
+        type: string
+    type: object
+  httpapi.CreateBookingRequest:
+    properties:
+      seat_ids:
+        items:
+          type: string
+        maxItems: 5
+        type: array
+      showtime_id:
+        maxLength: 255
+        type: string
+    required:
+    - seat_ids
+    - showtime_id
+    type: object
+  httpapi.CreateBookingResponse:
+    properties:
+      data:
+        $ref: '#/definitions/httpapi.BookingWithSeats'
+    type: object
+  httpapi.CreateMovieRequest:
+    properties:
+      duration:
+        type: integer
+      title:
+        type: string
+    required:
+    - duration
+    - title
+    type: object
+  httpapi.CreateMovieResponse:
+    properties:
+      data:
+        $ref: '#/definitions/entity.Movie'
+    type: object
+  httpapi.CreateSeatRequest:
+    properties:
+      class:
+        maxLength: 255
+        type: string
+      number:
+        type: integer
+      row:
+        maxLength: 255
+        type: string
+      screen_id:
+        maxLength: 255
+        type: string
+    required:
+    - class
+    - number
+    - row
+    - screen_id
+    type: object
+  httpapi.CreateSeatResponse:
+    properties:
+      data:
+        $ref: '#/definitions/entity.Seat'
+    type: object
+  httpapi.CreateShowtimeRequest:
+    properties:
+      movie_id:
+        maxLength: 255
+        type: string
+      screen_id:
+        maxLength: 255
+        type: string
+      start_time:
+        type: string
+    required:
+    - movie_id
+    - screen_id
+    - start_time
+    type: object
+  httpapi.CreateShowtimeResponse:
+    properties:
+      data:
+        $ref: '#/definitions/entity.Showtime'
+    type: object
+  httpapi.GetMovieResponse:
+    properties:
+      data:
+        $ref: '#/definitions/entity.Movie'
+    type: object
+  httpapi.GetMoviesResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/entity.Movie'
+        type: array
+    type: object
+  httpapi.GetSeatInterestResponse:
+    properties:
+      data:
+        $ref: '#/definitions/httpapi.GetSeatInterestResponseData'
+    type: object
+  httpapi.GetSeatInterestResponseData:
+    properties:
+      qty:
+        type: integer
+    type: object
+  httpapi.GetSeatsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/entity.SeatWithStatus'
+        type: array
+    type: object
+  httpapi.GetShowtimesResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/entity.Showtime'
+        type: array
+    type: object
+  httpapi.HoldSeatRequest:
+    properties:
+      seat_id:
+        maxLength: 255
+        type: string
+      showtime_id:
+        maxLength: 255
+        type: string
+    required:
+    - seat_id
+    - showtime_id
+    type: object
+  httpapi.HoldSeatResponse:
+    properties:
+      data:
+        $ref: '#/definitions/httpapi.HoldSeatResponseData'
+    type: object
+  httpapi.HoldSeatResponseData:
+    properties:
+      qty:
+        description: Number of users currently holding seats
+        type: integer
+    type: object
+  httpapi.LoginRequest:
+    properties:
+      password:
+        maxLength: 30
+        minLength: 6
+        type: string
+      username:
+        maxLength: 24
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  httpapi.LoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/httpapi.UserWithAccessToken'
+    type: object
+  httpapi.ReleaseSeatRequest:
+    properties:
+      seat_id:
+        maxLength: 255
+        type: string
+      showtime_id:
+        maxLength: 255
+        type: string
+    required:
+    - seat_id
+    - showtime_id
+    type: object
+  httpapi.ReleaseSeatResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  httpapi.UserRegisterRequest:
+    properties:
+      address:
+        maxLength: 255
+        type: string
+      password:
+        maxLength: 30
+        minLength: 6
+        type: string
+      phone_number:
+        maxLength: 11
+        type: string
+      username:
+        maxLength: 24
+        minLength: 6
+        type: string
+    required:
+    - address
+    - password
+    - phone_number
+    - username
+    type: object
+  httpapi.UserRegisterResponse:
+    properties:
+      data:
+        $ref: '#/definitions/httpapi.UserWithAccessToken'
+    type: object
+  httpapi.UserWithAccessToken:
+    properties:
+      access_token:
+        type: string
+      user:
+        $ref: '#/definitions/entity.User'
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for cinema booking
+  title: Cinema Booking API
+  version: "1.0"
+paths:
+  /bookings:
+    post:
+      consumes:
+      - application/json
+      description: Create a booking from selected seats
+      parameters:
+      - description: create booking request
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.CreateBookingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.CreateBookingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      security:
+      - BearerAuth: []
+      summary: Create a booking
+      tags:
+      - booking
+  /bookings/hold-seat:
+    post:
+      consumes:
+      - application/json
+      description: Hold a seat of a showtime (not lock seat other user still can book
+        this seat)
+      parameters:
+      - description: request credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.HoldSeatRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.HoldSeatResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      security:
+      - BearerAuth: []
+      summary: Hold a seat
+      tags:
+      - seat
+  /bookings/release-seat:
+    post:
+      consumes:
+      - application/json
+      description: Unselect a seat
+      parameters:
+      - description: request credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.ReleaseSeatRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.ReleaseSeatResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      security:
+      - BearerAuth: []
+      summary: Release a seat
+      tags:
+      - seat
+  /movies:
+    get:
+      consumes:
+      - application/json
+      description: Get list movies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.GetMoviesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      summary: Get list movies
+      tags:
+      - movie
+    post:
+      consumes:
+      - application/json
+      description: Create a movie
+      parameters:
+      - description: Create movie request
+        in: body
+        name: movie
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.CreateMovieRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.CreateMovieResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      security:
+      - BearerAuth: []
+      summary: Create a movie
+      tags:
+      - movie
+  /movies/{movie_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get movie detail
+      parameters:
+      - in: path
+        name: movie_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.GetMovieResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      summary: Get movie detail
+      tags:
+      - movie
+  /movies/{movie_id}/showtimes:
+    get:
+      consumes:
+      - application/json
+      description: Get list showtimes of a movie
+      parameters:
+      - in: path
+        name: movie_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.GetShowtimesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      summary: Get list showtimes of a movie
+      tags:
+      - showtime
+  /seats:
+    post:
+      consumes:
+      - application/json
+      description: Create a seat
+      parameters:
+      - description: create seat request
+        in: body
+        name: seat
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.CreateSeatRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.CreateSeatResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      security:
+      - BearerAuth: []
+      summary: Create a seat
+      tags:
+      - seat
+  /showtimes:
+    post:
+      consumes:
+      - application/json
+      description: Create a showtime
+      parameters:
+      - description: create showtime request
+        in: body
+        name: showtime
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.CreateShowtimeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.CreateShowtimeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      security:
+      - BearerAuth: []
+      summary: Create a showtime
+      tags:
+      - showtime
+  /showtimes/{showtime_id}/seats:
+    get:
+      consumes:
+      - application/json
+      description: Get seats of a showtime
+      parameters:
+      - in: path
+        name: showtime_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.GetSeatsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      summary: Get seats of a showtime
+      tags:
+      - seat
+  /showtimes/{showtime_id}/seats/{seat_id}/interest:
+    get:
+      consumes:
+      - application/json
+      description: Get quantity of interested user of this seat
+      parameters:
+      - in: path
+        name: seat_id
+        required: true
+        type: string
+      - in: path
+        name: showtime_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.GetSeatInterestResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      summary: Get quantity of interested user of this seat
+      tags:
+      - seat
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: request credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      summary: Login
+      tags:
+      - user
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Register
+      parameters:
+      - description: request credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.UserRegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.UserRegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorx.ErrorWrapper'
+      summary: Register
+      tags:
+      - user
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -20,6 +20,18 @@ type CreateSeatResponse struct {
 	Data *entity.Seat `json:"data"`
 }
 
+// CreateSeat godoc
+// @Summary      Create a seat
+// @Description  Create a seat
+// @Tags         seat
+// @Accept       json
+// @Produce      json
+// @Security BearerAuth
+// @Param        seat   	body 	CreateSeatRequest  	true  "create seat request"
+// @Success      200  {object}  CreateSeatResponse
+// @Failure      400  {object}  errorx.ErrorWrapper
+// @Failure      500  {object}  errorx.ErrorWrapper
+// @Router       /seats [post]
 func (c *Controller) CreateSeat(ctx *gin.Context) {
 	request := &CreateSeatRequest{}
 	if err := ctx.ShouldBind(request); err != nil {

@@ -18,11 +18,12 @@ func (b *BookingService) ReleaseSeat(ctx context.Context, dto *ReleaseSeatDTO) e
 	logger := log.For(ctx)
 
 	// Temporary lock seats
-	if err := b.seatCache.ReleaseSeats(ctx, redis.ReleaseSeatsBulkDTO{
-		SeatIDs:    []uuid.UUID{dto.SeatID},
+	if err := b.seatCache.ReleaseSeat(ctx, redis.ReleaseSeatDTO{
+		SeatID:     dto.SeatID,
 		UserID:     dto.UserID,
 		ShowtimeID: dto.ShowtimeID,
 	}); err != nil {
+		logger.Error("error release seat", zap.Error(err))
 		return err
 	}
 

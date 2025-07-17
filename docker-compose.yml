@@ -13,6 +13,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: cinema_booking
+    networks:
+      - cinema_net
+
 
   redis:
     container_name: cinema_booking_redis
@@ -22,5 +25,39 @@ services:
     environment:
       REDIS_REPLICATION_MODE: master
       ALLOW_EMPTY_PASSWORD: yes
+    networks:
+      - cinema_net
+
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config/dev.yml:/app/config/local.yml
+    depends_on:
+      - db
+      - redis
+    networks:
+      - cinema_net
+
+  frontend:
+    build:
+      context: ./fe
+    ports:
+      - "3000:80"
+    volumes:
+      - ./fe:/app
+    depends_on:
+      - backend
+    networks:
+      - cinema_net
+
+networks:
+  cinema_net:
+    driver: bridge
+
 volumes:
   db_volume:

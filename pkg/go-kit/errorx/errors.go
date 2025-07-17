@@ -27,7 +27,7 @@ type ErrorWrapper struct {
 type ErrorBody struct {
 	Error   string       `json:"error"`
 	Code    int32        `json:"code"`
-	Details *ErrorDetail `json:"details,omitempty"`
+	Details *ErrorDetail `json:"-"`
 }
 
 type ErrorDetail struct {

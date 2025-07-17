@@ -3,6 +3,7 @@ package mysql
 import (
 	"context"
 	"github.com/1612421/cinema-booking/internal/entity"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -30,4 +31,14 @@ func (m *UserRepository) GetByUsername(ctx context.Context, username string) (*e
 	tx := m.db.WithContext(ctx).Model(&entity.User{}).First(&user, "username = ?", username)
 
 	return user, tx.Error
+}
+
+func (m *UserRepository) GetUsersExceptID(ctx context.Context, limit int, exceptedID uuid.UUID) ([]*entity.User, error) {
+	var users []*entity.User
+	tx := m.db.WithContext(ctx).
+		Model(&entity.User{}).
+		Limit(limit).
+		Find(&users, "id != ?", exceptedID)
+
+	return users, tx.Error
 }

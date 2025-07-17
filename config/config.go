@@ -20,12 +20,20 @@ type Config struct {
 	Redis          *cacheredis.Config `json:"redis" mapstructure:"redis"`
 	Log            *log.Config        `json:"log,omitempty" mapstructure:"log"`
 	SessionService *ExternalService   `json:"session_service,omitempty" mapstructure:"session_service"`
-	Auth           AuthConfig         `json:"auth" mapstructure:"auth"`
+	Auth           *AuthConfig        `json:"auth" mapstructure:"auth"`
+	Bot            *BotConfig         `json:"bot" mapstructure:"bot"`
 }
 
 type AuthConfig struct {
 	Secret   string `json:"secret" mapstructure:"secret"`
 	ExpireIn int    `json:"expire_in" mapstructure:"expire_in"`
+}
+
+type BotConfig struct {
+	Workers       int     `json:"workers" mapstructure:"workers"`
+	BookingChange float64 `json:"booking_change" mapstructure:"booking_change"`
+	Frequency     int     `json:"frequency" mapstructure:"frequency"`
+	IsEnabled     bool    `json:"is_enabled" mapstructure:"is_enabled"`
 }
 
 type Service struct {

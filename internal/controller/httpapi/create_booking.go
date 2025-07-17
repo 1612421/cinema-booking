@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
+	"strings"
 )
 
 type CreateBookingRequest struct {
@@ -17,13 +18,25 @@ type CreateBookingRequest struct {
 
 type BookingWithSeats struct {
 	*entity.Booking
-	BookingSeats *[]entity.BookingSeat `json:"booking_seats"`
+	BookingSeats []*entity.BookingSeat `json:"booking_seats"`
 }
 
 type CreateBookingResponse struct {
 	Data BookingWithSeats `json:"data"`
 }
 
+// CreateBooking godoc
+// @Summary      Create a booking
+// @Description  Create a booking from selected seats
+// @Tags         booking
+// @Accept       json
+// @Produce      json
+// @Security BearerAuth
+// @Param        booking   	body 	CreateBookingRequest  	true  "create booking request"
+// @Success      200  {object}  CreateBookingResponse
+// @Failure      400  {object}  errorx.ErrorWrapper
+// @Failure      500  {object}  errorx.ErrorWrapper
+// @Router       /bookings [post]
 func (c *Controller) CreateBooking(ctx *gin.Context) {
 	request := &CreateBookingRequest{}
 
@@ -40,9 +53,22 @@ func (c *Controller) CreateBooking(ctx *gin.Context) {
 	}
 	booking, bookingSeats, err := c.bookingService.CreateBooking(ctx, dto)
 	if err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, errorx.New(http.StatusBadRequest, "Your seat have already been booking"))
+			return
+		}
+
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
+
+	c.socketService.BroadcastMessageExceptID(gin.H{
+		"event": "booking_created",
+		"data": gin.H{
+			"showtime_id": dto.ShowtimeID,
+			"seat_ids":    dto.SeatIDs,
+		},
+	}, dto.UserID)
 
 	ctx.JSON(http.StatusOK, CreateBookingResponse{
 		Data: BookingWithSeats{

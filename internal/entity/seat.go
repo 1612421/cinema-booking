@@ -15,6 +15,11 @@ type Seat struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+type SeatWithStatus struct {
+	*Seat
+	IsAvailable bool `json:"is_available"`
+}
+
 func (s *Seat) TableName() string {
 	return "seats"
 }

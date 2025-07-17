@@ -9,7 +9,7 @@ import (
 )
 
 type LoginRequest struct {
-	Username string `json:"username" binding:"required,min=6,max=24"`
+	Username string `json:"username" binding:"required,max=24"`
 	Password string `json:"password" binding:"required,min=6,max=30"`
 }
 
@@ -17,6 +17,17 @@ type LoginResponse struct {
 	Data *UserWithAccessToken `json:"data"`
 }
 
+// Login godoc
+// @Summary      Login
+// @Description  Login
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param        request   	body 	LoginRequest  	true  "request credentials"
+// @Success      200  {object}  LoginResponse
+// @Failure      400  {object}  errorx.ErrorWrapper
+// @Failure      500  {object}  errorx.ErrorWrapper
+// @Router       /users/login [post]
 func (c *Controller) Login(ctx *gin.Context) {
 	request := &LoginRequest{}
 	if err := ctx.ShouldBind(request); err != nil {
@@ -39,6 +50,18 @@ func (c *Controller) Login(ctx *gin.Context) {
 		Username: user.Username,
 		UserId:   user.ID,
 	})
+
+	// ⏩ Start bot once if not already running
+	go func() {
+		c.viewerSeatBotRunner.StartIfNotRunning(
+			c.showtimeService.GetShowtimeRepo(),
+			c.seatService.GetSeatRepo(),
+			c.userService.GetUserRepo(),
+			c.bookingService,
+			c.socketService,
+			user.ID,
+		)
+	}()
 
 	ctx.JSON(http.StatusOK, UserRegisterResponse{Data: &UserWithAccessToken{
 		User:        user,
