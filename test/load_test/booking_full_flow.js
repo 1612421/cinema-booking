@@ -2,13 +2,12 @@ import http from 'k6/http'
 import { sleep, check } from 'k6'
 
 export const options = {
-    vus: 20,
     stages: [
-        { duration: '10s', target: 20 }, // tăng từ 0 lên 20 VUs
-        { duration: '20s', target: 50 }, // tăng tiếp lên 50
-        { duration: '30s', target: 100 }, // spike lên 100 users
-        { duration: '15s', target: 100 }, // giữ ở mức cao 100 VUs
-        { duration: '10s', target: 20 }, // giảm xuống
+        { duration: '5s', target: 40 }, // tăng từ 0 lên 20 VUs
+        { duration: '10s', target: 200 }, // tăng tiếp lên 100
+        { duration: '30s', target: 500 }, // spike lên 200 users
+        { duration: '15s', target: 500 }, // giữ ở mức cao 200 VUs
+        { duration: '10s', target: 100 }, // giảm xuống
         { duration: '5s', target: 0 },   // dừng
     ],
 }

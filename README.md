@@ -46,10 +46,15 @@ API Document được tạo  trong folder docs
 - Thêm nhiều table để quản lý thêm các mục khác như rạp nào, phòng nào, ...
 
 
+## Demo:
+Video demo: https://drive.google.com/file/d/13C4YJ8b5k_R1uIkkFnbvls6DP80OdLkN/view
+
+## Load test
+video load test: https://drive.google.com/file/d/1vDWMxpUcmbF0u9uahIG6FikO3vQOYk0E/view?usp=sharing
+
 # Home work 2
 
 - Websocket đã được tích hợp vào home work 1
 - Khi user call API giữ ghế, một event sẽ được gửi cho toàn bộ user đang kết nối. 
 Mục đích để UI xử lý để các user chọn ghế 1 cách dễ dàng hơn
 - Hệ thống socket hiện tại chỉ run được trên single instance nen cần tích hợp thêm Redis Pub/Sub để có thể run server trên nhiều instance khi lượng traffic lớn
-

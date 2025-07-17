@@ -1,6 +1,6 @@
 -- seed.sql - Seed data for cinema booking system with UUIDs only
 
--- Insert test user1 and password is test123
+-- Toàn bộ user đều sử dụng password là test123
 INSERT
 IGNORE INTO users (id, username, password, status, address, phone_number, created_at, updated_at)
 VALUES 
